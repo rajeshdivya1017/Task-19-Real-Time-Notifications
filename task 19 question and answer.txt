@@ -1,0 +1,110 @@
+1. What is the difference between HTTP and WebSocket communication?
+
+HTTP Communication
+=========================
+	HTTP follows a request-response model. The client sends a request to the server, and the server sends back a response. Once the response is sent, the connection is closed. If the client needs updated information, it must send another request.
+
+Example in this project:
+==============================
+Login
+Register
+Fetch products
+Place an order
+Load previous notifications
+
+WebSocket Communication:
+===============================
+	WebSocket creates a persistent two-way connection between the client and the server. After the connection is established, both the client and the server can send messages at any time without creating a new connection.
+
+Example in this project:
+===============================
+	As soon as a customer places an order, all connected admin users receive a notification immediately without refreshing the page.
+
+
+2. What is a Socket.IO room and why did you use one for admin users instead of broadcasting to everyone?
+
+	A Socket.IO room is a logical group of connected clients. Sockets can join a room, and the server can send messages only to the clients in that room.
+	In this project, all admin users join the "admins" room after connecting.
+	When a customer places an order, the server sends the notification only to the admins room instead of every connected user.
+
+Why not broadcast to everyone?
+=============================================
+Customers do not need admin order notifications.
+Broadcasting to everyone wastes network resources.
+Rooms improve security by sending notifications only to the intended users.
+The application becomes more efficient and scalable.
+
+
+3. When a user refreshes the page, the socket disconnects and reconnects. How do previously saved notifications still appear in the bell dropdown?
+
+	Refreshing the page closes the current WebSocket connection. The browser then automatically creates a new connection.
+	If notifications existed only in memory, they would be lost after the refresh.
+	To avoid this, every notification is first saved in the MySQL notifications table.
+
+When the page loads:
+==========================
+The frontend reconnects to the WebSocket.
+It also calls the GET /api/notifications API.
+The backend reads the latest notifications from MySQL.
+The frontend displays them in the notification bell.
+
+Flow:
+
+Page Refresh
+      │
+      ▼
+Socket Reconnects
+      │
+      ▼
+GET /api/notifications
+      │
+      ▼
+MySQL notifications table
+      │
+      ▼
+Bell dropdown displays saved notifications
+
+Because the notifications are stored in the database, users can still see previous notifications even after refreshing or logging in again.
+
+4. What does socketio.emit() do versus emit() inside a @socketio.on() handler? What is the difference?
+socketio.emit()
+====================
+	socketio.emit() is used anywhere in the Flask application, such as inside API routes or helper functions.
+	It sends an event to all clients or to a specific room.
+
+Example:
+==========
+	socketio.emit(
+         "new_notification",
+         data,
+          room="admins"
+	)
+
+In this project, after a customer places an order, the backend uses socketio.emit() to notify all connected admin users.
+
+	emit() inside a @socketio.on() handler
+	emit() is used only inside a Socket.IO event handler.
+
+Example:
+==========
+@socketio.on("join_admin")
+def join_admin():
+    emit("joined", {"message": "Joined successfully"})
+
+Here, emit() usually sends a response to the client that triggered the event, although it can also be configured to broadcast.
+
+Difference
+===============
+socketio.emit()
+===============						
+Can be called from anywhere in the Flask application.	
+Commonly used from HTTP routes or background tasks.	
+Can send messages to all clients or specific rooms.	
+Used in this project after an order is placed to notify all admins.	
+
+emit()
+=======
+Used only inside a @socketio.on() event handler.
+Used while handling Socket.IO events.
+Usually replies to the connected client that triggered the event.
+Used when responding to Socket.IO events such as a client joining a room.
