@@ -1,0 +1,70 @@
+Task 19 - Real-Time Notification System using Flask-SocketIO
+============================================================
+Project Title:
+=====================
+	Real-Time Notification System for E-Commerce Platform using Flask-SocketIO and React
+
+Project Overview:
+=========================
+	The Real-Time Notification System is an enhancement to the E-Commerce Platform that instantly notifies administrators whenever a customer places a new order. Instead of manually refreshing the Orders page, admins receive live notifications through a notification bell powered by WebSockets.
+	The system uses Flask-SocketIO on the backend and Socket.IO Client in React to establish a persistent connection between the server and the admin dashboard. Notifications are also stored in the MySQL database so that they remain available even after refreshing the page.
+
+Technologies Used:
+==========================
+Frontend:
+===========
+React.js
+React Router DOM
+React Context API
+Socket.IO Client
+Axios
+CSS
+
+Backend:
+==========
+Python
+Flask
+Flask-SocketIO
+Flask-JWT-Extended
+Flask-Bcrypt
+Flask-CORS
+
+Database:
+===========
+MySQL
+
+Purpose of the Project:
+==================================
+	The main purpose of this project is to provide real-time communication between customers and administrators.
+	Whenever a customer places an order, the admin receives an instant notification without refreshing the browser. The project demonstrates how WebSockets can be integrated into a full-stack application to improve responsiveness and user experience while maintaining notification history in the database.
+
+Features:
+=============
+Customer Features:
+======================
+Browse products
+Add products to cart
+Place orders
+View order history
+
+Admin Features:
+==================
+Manage products
+View customer orders
+Update order status
+Receive instant notifications for every new order
+Notification bell with unread notification count
+Notification history stored in MySQL
+Read/Unread notification status
+Notifications remain available after page refresh
+
+Real-Time Features:
+========================
+WebSocket connection using Flask-SocketIO
+Admin room-based notifications
+Automatic notification updates without page refresh
+Live unread badge updates
+
+Conclusion:
+===============
+	This project successfully implements a real-time notification system for an e-commerce application using Flask-SocketIO and React. The use of WebSockets enables instant communication between the backend and the admin dashboard, significantly improving the user experience. By storing notifications in MySQL, the application also ensures that notification history is preserved even after refreshing the page or logging in again. The project demonstrates practical implementation of real-time communication, authentication, database integration, and modern frontend development.
